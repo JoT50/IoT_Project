@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Studia\\IoT-zajecia\\ZapisywanieDoChmury\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{54023BC7-8AF7-4963-AF14-3678900D2F81}|ZapisywanieDoChmury\\ZapisywanieDoChmury.csproj|d:\\studia\\iot-zajecia\\zapisywaniedochmury\\zapisywaniedochmury\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{54023BC7-8AF7-4963-AF14-3678900D2F81}|ZapisywanieDoChmury\\ZapisywanieDoChmury.csproj|solutionrelative:zapisywaniedochmury\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Studia\\IoT-zajecia\\ZapisywanieDoChmury\\ZapisywanieDoChmury\\Program.cs",
+              "RelativeDocumentMoniker": "ZapisywanieDoChmury\\Program.cs",
+              "ToolTip": "D:\\Studia\\IoT-zajecia\\ZapisywanieDoChmury\\ZapisywanieDoChmury\\Program.cs",
+              "RelativeToolTip": "ZapisywanieDoChmury\\Program.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAAAFoAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-20T09:28:34.636Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
