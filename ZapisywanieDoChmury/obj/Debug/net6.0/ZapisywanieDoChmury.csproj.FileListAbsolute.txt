@@ -49,3 +49,4 @@ D:\Studia\IoT-zajecia\ZapisywanieDoChmury\ZapisywanieDoChmury\obj\Debug\net6.0\r
 D:\Studia\IoT-zajecia\ZapisywanieDoChmury\ZapisywanieDoChmury\obj\Debug\net6.0\ZapisywanieDoChmury.pdb
 D:\Studia\IoT-zajecia\ZapisywanieDoChmury\ZapisywanieDoChmury\obj\Debug\net6.0\ZapisywanieDoChmury.genruntimeconfig.cache
 D:\Studia\IoT-zajecia\ZapisywanieDoChmury\ZapisywanieDoChmury\obj\Debug\net6.0\ref\ZapisywanieDoChmury.dll
+D:\Studia\IoT-zajecia\ZapisywanieDoChmury\ZapisywanieDoChmury\obj\Debug\net6.0\ZapisywanieDoChmury.sourcelink.json
