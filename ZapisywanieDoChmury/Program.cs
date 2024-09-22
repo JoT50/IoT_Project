@@ -18,7 +18,10 @@ class Program
         opcClient.Connect();
 
         Console.WriteLine("Monitoring Device Twin changes...\n");
+
         await MonitorDeviceTwinChangesAsync();
+        await deviceClient.SetMethodHandlerAsync("EmergencyStop", EmergencyStopMethodHandler, null);
+        await deviceClient.SetMethodHandlerAsync("ResetErrorStatus", ResetErrorStatusMethodHandler, null);
 
         while (true)
         {
@@ -229,5 +232,39 @@ class Program
         opcClient.CallMethod(deviceNode, $"{deviceNode}/ResetErrorStatus");
         await Task.Delay(1000);
         Console.WriteLine("Error status reset executed.");
+    }
+
+    private static Task<MethodResponse> EmergencyStopMethodHandler(MethodRequest methodRequest, object userContext)
+    {
+        Console.WriteLine("Direct Method: Emergency Stop received.");
+
+        try
+        {
+            CallEmergencyStop().Wait();
+            string result = "{\"result\":\"Executed Emergency Stop\"}";
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+        catch (Exception ex)
+        {
+            string result = $"{{\"error\":\"{ex.Message}\"}}";
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 500));
+        }
+    }
+
+    private static Task<MethodResponse> ResetErrorStatusMethodHandler(MethodRequest methodRequest, object userContext)
+    {
+        Console.WriteLine("Direct Method: Reset Error Status received.");
+
+        try
+        {
+            CallResetErrorStatus().Wait();
+            string result = "{\"result\":\"Executed Reset Error Status\"}";
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
+        }
+        catch (Exception ex)
+        {
+            string result = $"{{\"error\":\"{ex.Message}\"}}";
+            return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 500));
+        }
     }
 }
