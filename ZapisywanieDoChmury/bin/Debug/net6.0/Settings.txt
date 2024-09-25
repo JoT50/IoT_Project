@@ -1,0 +1,3 @@
+OpcServer=opc.tcp://localhost:4840/
+DeviceConnectionString1=HostName=EasyTestHub.azure-devices.net;DeviceId=Device1;SharedAccessKey=ddEOWJ1ppoSC+5DF+8HL4SFvOSjv1AZ/YCU1IX1JsfE=
+DeviceConnectionString2=HostName=EasyTestHub.azure-devices.net;DeviceId=Device2;SharedAccessKey=KLkZNKaN9ep37CjsFTbKw1NCc99xkXE763lEOC774PM=
