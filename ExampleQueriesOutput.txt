@@ -1,0 +1,19 @@
+Temperatura:
+
+{"WindowEnd":"2024-09-26T17:27:00.0000000Z","DeviceId":"Device 1","AvgTemperature":79.1092765663134,"MinTemperature":69.43246158049968,"MaxTemperature":85.57974433608254}
+{"WindowEnd":"2024-09-26T17:27:00.0000000Z","DeviceId":"Device 2","AvgTemperature":82.85126599266964,"MinTemperature":62.11365420080729,"MaxTemperature":99.2268586934974}
+
+Produkcja:
+
+{"WindowEnd":"2024-09-26T17:31:18.2580000Z","DeviceId":"Device 1","GoodProductionPercentage":88.75}
+{"WindowEnd":"2024-09-26T17:31:18.4770000Z","DeviceId":"Device 2","GoodProductionPercentage":90.47619047619048}
+{"WindowEnd":"2024-09-26T17:31:19.2410000Z","DeviceId":"Device 1","GoodProductionPercentage":88.40579710144928}
+{"WindowEnd":"2024-09-26T17:31:19.4600000Z","DeviceId":"Device 2","GoodProductionPercentage":92.20779220779221}
+
+Błędy
+
+{"WindowEnd":"2024-09-26T13:19:10.9270000Z","DeviceId":"Device 2","RecordCount":3}
+{"WindowEnd":"2024-09-26T13:19:18.6140000Z","DeviceId":"Device 2","RecordCount":4}
+{"WindowEnd":"2024-09-26T13:19:26.3180000Z","DeviceId":"Device 2","RecordCount":5}
+{"WindowEnd":"2024-09-26T13:19:55.5820000Z","DeviceId":"Device 2","RecordCount":4}
+{"WindowEnd":"2024-09-26T13:20:03.2550000Z","DeviceId":"Device 2","RecordCount":3}

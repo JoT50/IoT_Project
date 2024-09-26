@@ -1,0 +1,67 @@
+WITH ProductionCounts AS (
+    SELECT
+        System.Timestamp AS WindowEnd, 
+        DeviceId, 
+        MIN(GoodCount) AS MinGoodCount, 
+        MAX(GoodCount) AS MaxGoodCount, 
+        MIN(BadCount) AS MinBadCount,
+        MAX(BadCount) AS MaxBadCount
+    FROM 
+        [Zajecia02-iothubinput]
+    WHERE
+        ErrorCode IS NULL
+    GROUP BY 
+        DeviceId,
+        SlidingWindow(minute, 1)
+)
+
+SELECT 
+    WindowEnd,
+    DeviceId,
+    CASE 
+        WHEN ((MaxGoodCount - MinGoodCount) + (MaxBadCount - MinBadCount)) > 0 
+        THEN ((MaxGoodCount - MinGoodCount) * 1.0 / ((MaxGoodCount - MinGoodCount) + (MaxBadCount - MinBadCount))) * 100
+        ELSE NULL
+    END AS GoodProductionPercentage
+INTO 
+    [production-output]
+FROM 
+    ProductionCounts
+WHERE 
+    (MaxGoodCount IS NOT NULL AND MaxBadCount IS NOT NULL);
+
+
+
+
+
+SELECT
+    System.Timestamp AS WindowEnd,
+    DeviceId,
+    AVG(CAST(Temperature AS FLOAT)) AS AvgTemperature,
+    MIN(CAST(Temperature AS FLOAT)) AS MinTemperature,
+    MAX(CAST(Temperature AS FLOAT)) AS MaxTemperature
+INTO
+    [temperature-output]
+FROM 
+    [Zajecia02-iothubinput]
+GROUP BY 
+    DeviceId,
+    HoppingWindow(minute, 2, 1)
+
+
+
+SELECT
+        System.Timestamp AS WindowEnd,
+        DeviceId,
+        COUNT(*) AS RecordCount
+    INTO
+        [3-errors-in-minute-output]
+    FROM 
+        [Zajecia02-iothubinput]
+    WHERE
+        ErrorCode IS NOT NULL
+    GROUP BY 
+        DeviceId,
+        SlidingWindow(minute, 1)
+    HAVING
+        COUNT(*) > 2

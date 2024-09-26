@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZapisywanieDoChmury")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1da784867272616afd575e73d399c2d7f6304ae5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e530f12ae411d03c35737e8d4229e80d531e341")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZapisywanieDoChmury")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZapisywanieDoChmury")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

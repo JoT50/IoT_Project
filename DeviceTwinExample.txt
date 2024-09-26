@@ -1,0 +1,75 @@
+{
+	"deviceId": "test_device",
+	"etag": "AAAAAAAAABw=",
+	"deviceEtag": "NjE4NTk0OTU0",
+	"status": "enabled",
+	"statusUpdateTime": "0001-01-01T00:00:00Z",
+	"connectionState": "Disconnected",
+	"lastActivityTime": "2024-09-26T15:45:39.8991317Z",
+	"cloudToDeviceMessageCount": 0,
+	"authenticationType": "sas",
+	"x509Thumbprint": {
+		"primaryThumbprint": null,
+		"secondaryThumbprint": null
+	},
+	"modelId": "",
+	"version": 276,
+	"properties": {
+		"desired": {
+			"test": 1,
+			"ProductionRate": 20,
+			"$metadata": {
+				"$lastUpdated": "2024-09-26T09:32:18.6894116Z",
+				"$lastUpdatedVersion": 28,
+				"test": {
+					"$lastUpdated": "2024-09-26T09:32:18.6894116Z",
+					"$lastUpdatedVersion": 28
+				},
+				"ProductionRate": {
+					"$lastUpdated": "2024-09-26T09:32:18.6894116Z",
+					"$lastUpdatedVersion": 28
+				}
+			},
+			"$version": 28
+		},
+		"reported": {
+			"DateTimeLastAppLaunch": "2024-05-17T12:56:29.2690464+02:00",
+			"DateTimeLastDesiredPropertyChangeRecieved": "2024-05-16T22:01:21.7600285+02:00",
+			"DeviceError": 2,
+			"ProductionRate": 20,
+			"DeviceErrorMessage": "Multiple Errors",
+			"ErrorMessage": "Power Failure",
+			"$metadata": {
+				"$lastUpdated": "2024-09-26T17:07:17.2527188Z",
+				"DateTimeLastAppLaunch": {
+					"$lastUpdated": "2024-05-17T10:56:30.0073404Z"
+				},
+				"DateTimeLastDesiredPropertyChangeRecieved": {
+					"$lastUpdated": "2024-05-16T20:01:22.5198433Z"
+				},
+				"DeviceError": {
+					"$lastUpdated": "2024-09-26T17:07:17.2527188Z",
+					"Code": {
+						"$lastUpdated": "2024-09-20T11:32:45.1689143Z"
+					},
+					"Message": {
+						"$lastUpdated": "2024-09-20T11:32:45.1689143Z"
+					}
+				},
+				"ProductionRate": {
+					"$lastUpdated": "2024-09-26T09:32:18.7559334Z"
+				},
+				"DeviceErrorMessage": {
+					"$lastUpdated": "2024-09-26T08:38:44.6709971Z"
+				},
+				"ErrorMessage": {
+					"$lastUpdated": "2024-09-26T17:07:17.2527188Z"
+				}
+			},
+			"$version": 248
+		}
+	},
+	"capabilities": {
+		"iotEdge": false
+	}
+}

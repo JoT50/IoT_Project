@@ -1,0 +1,31 @@
+Error message
+
+{
+  "body": {
+    "DeviceId": "Device 1",
+    "ErrorCode": 2,
+    "ErrorMessage": "Power Failure",
+    "Timestamp": "2024-09-26T17:07:15.6129268Z"
+  },
+  "enqueuedTime": "Thu Sep 26 2024 19:07:17 GMT+0200 (czas środkowoeuropejski letni)",
+  "properties": {
+    "MessageType": "DeviceError"
+  }
+}
+
+Telemetry
+
+{
+  "body": {
+    "DeviceId": "Device 1",
+    "ProductionStatus": 1,
+    "WorkorderId": "d84f6491-904f-44f5-a9bc-1d0c3bd454b8",
+    "Temperature": 60.97077048043802,
+    "GoodCount": 42,
+    "BadCount": 4
+  },
+  "enqueuedTime": "Thu Sep 26 2024 19:07:39 GMT+0200 (czas środkowoeuropejski letni)",
+  "properties": {
+    "MessageType": "Telemetry"
+  }
+}
