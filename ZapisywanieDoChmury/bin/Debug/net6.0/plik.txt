@@ -1,0 +1,3 @@
+opc.tcp://localhost:4840/
+Device 1, HostName=Zajecia02.azure-devices.net;DeviceId=test_device;SharedAccessKey=cUnZn05tTHr6DL/OsBVFPMUFVBIneTopQAIoTE4fqRc=
+Device 2, HostName=Zajecia02.azure-devices.net;DeviceId=test_device2;SharedAccessKey=D0aBqzMTsu0xfLVHLP2repPkA3S1ftVB66nXW/T1T1E=

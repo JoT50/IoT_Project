@@ -7,25 +7,39 @@ using System.Text;
 
 class Program
 {
-    // Connection strings dla urządzeń
-    private static Dictionary<string, string> deviceConnectionStrings = new Dictionary<string, string>
-    {
-        { "Device 1", "HostName=Zajecia02.azure-devices.net;DeviceId=test_device;SharedAccessKey=cUnZn05tTHr6DL/OsBVFPMUFVBIneTopQAIoTE4fqRc=" },
-        { "Device 2", "HostName=Zajecia02.azure-devices.net;DeviceId=test_device2;SharedAccessKey=D0aBqzMTsu0xfLVHLP2repPkA3S1ftVB66nXW/T1T1E=" }
-    };
-
+    private static Dictionary<string, string> deviceConnectionStrings = new Dictionary<string, string>();
     private static Dictionary<string, DeviceClient> deviceClients = new Dictionary<string, DeviceClient>();
     private static OpcClient opcClient;
 
     static async Task Main(string[] args)
     {
-        // Inicjalizacja klienta OPC UA
-        opcClient = new OpcClient("opc.tcp://localhost:4840/");
+        string filePath = "plik.txt";
+        string[] lines = File.ReadAllLines(filePath);
+
+        // Wczytanie adresu OPC UA serwera (pierwsza linia)
+        string opcServerAddress = lines[0];
+        Console.WriteLine($"OPC UA Server Address: {opcServerAddress}\n");
+
+        Console.WriteLine("Connecting Devices...\n");
+
+        foreach (string line in lines.Skip(1))
+        {
+            Console.WriteLine(line);
+            var parts = line.Split(',');
+            if (parts.Length == 2)
+            {
+                string deviceId = parts[0].Trim();
+                string connectionString = parts[1].Trim();
+                deviceConnectionStrings.Add(deviceId, connectionString);
+            }
+        }
+
+        opcClient = new OpcClient(opcServerAddress);
         opcClient.Connect();
 
-        Console.WriteLine("Monitoring Device Twin changes...\n");
+        Console.WriteLine("\nMonitoring Device Twin changes...\n");
 
-        // Inicjalizacja klienta IoT dla każdego urządzenia
+        // Inicjalizacja klienta dla każdego urządzenia
         foreach (var deviceId in deviceConnectionStrings.Keys)
         {
             var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionStrings[deviceId], TransportType.Mqtt);
@@ -36,6 +50,8 @@ class Program
 
             await MonitorDeviceTwinChangesAsync(deviceId);
         }
+
+        Console.WriteLine("Devices Connected.\n");
 
         while (true)
         {
@@ -99,6 +115,7 @@ class Program
 
                     if (deviceErrorCode != reportedDeviceError && deviceErrorCode != 0)
                     {
+                        // Jeśli błąd się zmienił i nie jest równy 0, wysyłamy event do IoT Hub oraz aktualizujemy Twin
                         Console.WriteLine($"DeviceError changed from {reportedDeviceError} to {deviceErrorCode}");
 
                         var deviceError = new
@@ -109,13 +126,24 @@ class Program
                             Timestamp = DateTime.UtcNow
                         };
 
+                        // Wysyłanie wiadomości o błędzie do IoT Hub
                         await SendDeviceErrorEventToIoTHub(deviceId, deviceError);
+
+                        // Aktualizacja Twin (reported properties)
                         await UpdateReportedDeviceErrorAsync(deviceId, deviceErrorCode, errorMessage);
+                    }
+                    else if (deviceErrorCode == 0 && reportedDeviceError != 0)
+                    {
+                        // Jeśli błąd zmienia się na 0, tylko aktualizujemy Twin bez wysyłania wiadomości
+                        await UpdateReportedDeviceErrorAsync(deviceId, deviceErrorCode, errorMessage);
+                        Console.WriteLine($"DeviceError cleared (changed from {reportedDeviceError} to {deviceErrorCode})");
                     }
                     else
                     {
+                        // Wartość błędu się nie zmieniła
                         Console.WriteLine("DeviceError unchanged.");
                     }
+
 
                     Console.WriteLine("");
                 }
@@ -124,7 +152,7 @@ class Program
                     Console.WriteLine($"Unexpected error occurred: {ex.Message}");
                 }
             }
-            await Task.Delay(3000);
+            await Task.Delay(7000);
         }
     }
 
@@ -225,41 +253,110 @@ class Program
 
     private static async Task SendDeviceErrorEventToIoTHub(string deviceId, object deviceError)
     {
-        var errorMessageString = JsonConvert.SerializeObject(deviceError);
-        var message = new Message(Encoding.UTF8.GetBytes(errorMessageString));
+        var messageString = JsonConvert.SerializeObject(deviceError);
+        var message = new Message(Encoding.ASCII.GetBytes(messageString));
 
         message.Properties.Add("MessageType", "DeviceError");
-        message.Properties.Add("EventType", "Error");
-        message.ContentType = "application/json";
-        message.ContentEncoding = "utf-8";
 
         await deviceClients[deviceId].SendEventAsync(message);
-        Console.WriteLine($"Device error event sent to IoT Hub for {deviceId}");
+        Console.WriteLine($"DeviceError event sent to IoT Hub for {deviceId}");
     }
 
     private static async Task UpdateReportedDeviceErrorAsync(string deviceId, int errorCode, string errorMessage)
     {
         var reportedProperties = new TwinCollection();
         reportedProperties["DeviceError"] = errorCode;
-        reportedProperties["DeviceErrorMessage"] = errorMessage;
+        reportedProperties["ErrorMessage"] = errorMessage;
 
         await deviceClients[deviceId].UpdateReportedPropertiesAsync(reportedProperties);
-        Console.WriteLine($"DeviceError reported as {errorCode}: {errorMessage} for {deviceId}");
+        Console.WriteLine($"Reported DeviceError updated to: {errorCode} ({errorMessage}) for {deviceId}");
     }
 
-    private static Task<MethodResponse> EmergencyStopMethodHandler(MethodRequest methodRequest, object userContext)
+    private static async Task<MethodResponse> EmergencyStopMethodHandler(MethodRequest methodRequest, object userContext)
     {
-        string deviceId = (string)userContext;
-        Console.WriteLine($"Emergency stop triggered for {deviceId}");
+        string deviceId = (string)userContext; // Get deviceId from userContext
+        Console.WriteLine($"Emergency Stop triggered for device {deviceId}!");
 
-        return Task.FromResult(new MethodResponse(200));
+        try
+        {
+            CallEmergencyStop(deviceId);
+            string result = "{\"result\":\"Executed Emergency Stop\"}";
+            return new MethodResponse(Encoding.UTF8.GetBytes(result), 200); // 200: Success
+        }
+        catch (Exception ex)
+        {
+            string result = $"{{\"error\":\"{ex.Message}\"}}";
+            Console.WriteLine($"Error executing Emergency Stop for device {deviceId}: {ex.Message}");
+            return new MethodResponse(Encoding.UTF8.GetBytes(result), 500); // 500: Error
+        }
     }
 
-    private static Task<MethodResponse> ResetErrorStatusMethodHandler(MethodRequest methodRequest, object userContext)
+    private static async Task<MethodResponse> ResetErrorStatusMethodHandler(MethodRequest methodRequest, object userContext)
     {
-        string deviceId = (string)userContext;
-        Console.WriteLine($"Resetting error status for {deviceId}");
+        string deviceId = (string)userContext; // Get deviceId from userContext
+        Console.WriteLine($"Reset Error Status triggered for device {deviceId}!");
 
-        return Task.FromResult(new MethodResponse(200));
+        try
+        {
+            ResetErrorStatus(deviceId);
+            string result = "{\"result\":\"Executed Reset Error Status\"}";
+            return new MethodResponse(Encoding.UTF8.GetBytes(result), 200); // 200: Success
+        }
+        catch (Exception ex)
+        {
+            string result = $"{{\"error\":\"{ex.Message}\"}}";
+            Console.WriteLine($"Error executing Reset Error Status for device {deviceId}: {ex.Message}");
+            return new MethodResponse(Encoding.UTF8.GetBytes(result), 500); // 500: Error
+        }
     }
+
+
+    public static void CallEmergencyStop(string deviceId)
+    {
+        try
+        {
+            string objectNodeId = $"ns=2;s={deviceId}"; // Object node ID (device node)
+            string methodNodeId = $"ns=2;s={deviceId}/EmergencyStop"; // Method node ID for EmergencyStop
+            Console.WriteLine($"Calling Emergency Stop method on node: {methodNodeId}");
+
+            var result = opcClient.CallMethod(objectNodeId, methodNodeId); // Pass both object and method IDs
+            Console.WriteLine($"Emergency stop completed for {deviceId}. Result: {result}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error calling Emergency Stop for {deviceId}: {ex.Message}");
+        }
+    }
+
+
+
+    public static void ResetErrorStatus(string deviceId)
+    {
+        try
+        {
+            // Define the object node ID (Device node)
+            string objectNodeId = $"ns=2;s={deviceId}";  // Should be "Device 1"
+                                                         // Define the method node ID for ResetErrorStatus
+            string methodNodeId = $"ns=2;s={deviceId}/ResetErrorStatus";  // Should be "Device 1/ResetErrorStatus"
+
+            Console.WriteLine($"Calling Reset Error Status method on node: {methodNodeId}");
+
+            // Prepare input arguments (if needed, pass an empty list if no parameters are required)
+            IList<object> inputArguments = new List<object>();  // Typically empty unless specified by your method
+
+            // Call the method on the OPC UA client
+            var result = opcClient.CallMethod(objectNodeId, methodNodeId, inputArguments.ToArray());
+
+            // Handle result or response if applicable
+            Console.WriteLine($"Reset Error Status completed for {deviceId}. Result: {result}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error resetting error status for {deviceId}: {ex.Message}");
+        }
+    }
+
+
+
+
 }
